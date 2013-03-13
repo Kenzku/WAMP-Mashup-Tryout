@@ -1,0 +1,21 @@
+{
+  "name": "WebSocket-Tryout",
+  "version": "0.0.1",
+  "contributors": [
+        {
+            "name": "ken",
+            "email": ""
+        }
+  ],
+  "private": true,
+  "scripts": {
+    "start": "node wamp"
+  },
+  "dependencies": {
+    "express": "3.1.0",
+    "ejs": "*",
+    "socket.io":"*",
+    "ws": "~0.4.25",
+    "debug": "*"
+  }
+}

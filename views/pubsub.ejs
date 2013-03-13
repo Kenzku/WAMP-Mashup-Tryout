@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <script src="/javascripts/autobahn.js"></script>
+  <script src="/javascripts/subscription_2.js"></script>
+</head>
+<body>
+<div class="block">
+   <p>
+      Publish a simple event containing no data. <br>
+      In a second browser window/tab with the demo web app, open the console
+      (hit 'F12') and you can see events being received.
+   </p>
+   <button onclick="sess.subscribe('http://example.com/simple', onEvent);">Subscribe</button>
+   <button onclick="sess.unsubscribe('http://example.com/simple');">Unsubscribe</button>
+   <button onclick="sess.publish('http://example.com/simple', null);">Publish</button>
+</div>
+<div class="block">
+   <p>
+      Publish an event containing data.
+   </p>
+   <form>
+      <p>Message: <input id="form_message" type="text" size="50" maxlength="50" value="Hello, world!"></p>
+      <p>Flag: <input id="form_flag" type="checkbox"></p>
+      <p>Event:
+         <input id="event1" type="radio" name="eventtype" checked="">MyEvent 1
+         <input type="radio" name="eventtype">MyEvent 2
+      </p>
+   </form>
+   <button onclick="publishEvent()">Publish Event</button>
+</div>
+</body>
+</html>
