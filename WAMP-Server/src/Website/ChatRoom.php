@@ -4,6 +4,7 @@ use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\WampServerInterface;
 use Ratchet\Wamp\Topic;
 
+// reference: https://github.com/cboden/Ratchet
 class ChatRoom implements WampServerInterface {
     const CTRL_PREFIX = 'ctrl:';
     const EVENT_1 = "event:firstevent";
