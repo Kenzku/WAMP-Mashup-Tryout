@@ -13,6 +13,8 @@ To sreve the application you need a server running Node.js with NPM installed. S
     
 You also need to run WAMP server:
     
+    cd WAMP-server/
+    composer install
     cd WAMP-Server/bin
     php pubsub-server.php
 
