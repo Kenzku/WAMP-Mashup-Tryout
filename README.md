@@ -10,8 +10,10 @@ To sreve the application you need a server running Node.js with NPM installed. S
     cd WAMP-Tryout
     npm install
     node wamp.js
-    
-You also need to run WAMP server:
+
+```wamp.js``` itself acts as a webserver and WAMP server.
+
+Or, you can also use Ratchet WAMP server:
     
     cd WAMP-server/
     composer install
