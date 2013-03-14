@@ -10,5 +10,5 @@ var isMobile = function(ua) {
 }
 exports.show = function(req, res){
     var ua = req.headers['user-agent'].toLowerCase();
-    res.render('chatRoom_1', { title: 'Chat Room 1', topic: 'WebSocket', mobile: isMobile(ua)});
+    res.render('chatRoom_on_node', { title: 'Chat Room on node server', topic: 'firstevent', mobile: isMobile(ua)});
 };

@@ -2,8 +2,14 @@
  * User: Ken
  * Date: 28/02/2013
  * Time: 11:50
+ * Creator: Nico Kaiser <nico@kaiser.me>
  */
 
+// for testing subscription
+// i.e. when a client on http://localhost:3000/chatroom_on_node
+// subscribe event:firstevent
+// you can use postman send a post to localhost:3000/hub
+// the clien should receive a message.
 var qs = require('querystring');
 
 exports.show = function(req, res){

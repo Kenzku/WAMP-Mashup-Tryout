@@ -3,17 +3,15 @@
  * Date: 12/03/2013
  * Time: 13:42
  */
-/**
- * User: Ken
- * Date: 12/03/2013
- * Time: 10:04
- */
 $(document).ready(onDOMReady);
 var sess;
+var PORT = "3000"
 function onDOMReady(){
 
     // connect to WAMP server
-    ab.connect("ws://localhost:8080",
+    // 8080 is running on php wamp server
+    // 3000 is running on node.js wamp server
+    ab.connect("ws://localhost:" + PORT,
 
         // WAMP session was established
         function (session) {
@@ -22,8 +20,9 @@ function onDOMReady(){
             sess = session;
             console.log("Connected!");
 
-//            sess.prefix("event", "http://localhost:8080/events/myevents");
-            sess.subscribe("http://localhost:8080/events/myevents/firstevent", onEvent);
+            sess.prefix("event", "http://localhost:" + PORT + "/events/myevents");
+            sess.subscribe("event:firstevent", onEvent);
+//            sess.subscribe("http://localhost:" + PORT + "/events/myevents/firstevent", onEvent);
         },
 
         // WAMP session is gone
@@ -47,8 +46,8 @@ function onEvent(topicUri, event) {
 }
 
 function publishEvent(){
-    var excludeMe = false;
-    sess.publish("http://localhost:8080/events/myevents/firstevent", getMessage() || "", excludeMe);
+    var excludeMe = true;
+    sess.publish("event:firstevent", getMessage() || "", excludeMe);
 }
 
 function appendMessage(event){

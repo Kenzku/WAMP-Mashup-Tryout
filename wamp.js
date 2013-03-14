@@ -15,7 +15,7 @@ var express = require('express') //http://nodejs.org/api/modules.html#modules_mo
     , subscribe = require('./routes/subscribe.js')
     , subscribe_2 = require('./routes/subscribe_2.js')
     , chatRoom = require('./routes/chatRoom.js')
-    , chatRoom_1 = require('./routes/chatRoom_1.js') // testing if Ratchet supports Prefix
+    , chatRoom_on_node = require('./routes/chatRoom_on_node.js') // testing if Ratchet supports Prefix
     , chat = require('./routes/chatPhpExample.js')
     , user = require('./routes/user')
     , http = require('http')
@@ -32,9 +32,6 @@ var wss = new WebSocketServer({server:server});
 //var io = require('socket.io').listen(server);
 var wamp = wampServer.attach(wss);
 
-//console.log('----- This is Server: -----');
-//console.log(server);
-//console.log('----- Server end -----');
 
 app.configure(function(){
     app.set('port', process.env.PORT || 3000);
@@ -54,9 +51,7 @@ app.configure(function(){
 app.configure('development', function(){
     app.use(express.errorHandler());
 });
-//console.log('----- This is app: -----');
-//console.log(app);
-//console.log('----- app end -----');
+
 function middle(req, res, next) {
     req.wamp = wamp;
     next();
@@ -69,7 +64,7 @@ app.get('/sub',subscribe.show);
 app.get('/pubsub',subscribe_2.show);
 app.get('/chat',chat.show);
 app.get('/chatroom',chatRoom.show);
-app.get('/chatRoom_1',chatRoom_1.show);
+app.get('/chatroom_on_node',chatRoom_on_node.show);
 
 // post methods
 app.post('/hub', middle, publish.show);

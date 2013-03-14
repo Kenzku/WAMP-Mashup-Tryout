@@ -8,6 +8,8 @@ var sess;
 function onDOMReady(){
 
     // connect to WAMP server
+    // 8080 is running on php wamp server
+    // 3000 is running on node.js wamp server
     ab.connect("ws://localhost:8080",
 
         // WAMP session was established
