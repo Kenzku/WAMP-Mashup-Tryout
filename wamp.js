@@ -17,6 +17,7 @@ var express = require('express') //http://nodejs.org/api/modules.html#modules_mo
     , chatRoom = require('./routes/chatRoom.js')
     , chatRoom_on_node = require('./routes/chatRoom_on_node.js') // testing if Ratchet supports Prefix
     , chat = require('./routes/chatPhpExample.js')
+    , rpc = require('./routes/rpc.js')
     , user = require('./routes/user')
     , http = require('http')
     , path = require('path')
@@ -65,12 +66,73 @@ app.get('/pubsub',subscribe_2.show);
 app.get('/chat',chat.show);
 app.get('/chatroom',chatRoom.show);
 app.get('/chatroom_on_node',chatRoom_on_node.show);
+app.get('/rpc', middle, rpc.show);
 
 // post methods
 app.post('/hub', middle, publish.show);
 
+
+wamp.on('call', function(procUri, args, cb) {
+    if (! procs[procUri]) {
+        return cb('Unknown procedure: ' + procUri);
+    }
+    console.log('The the procedure URI is: ');
+    console.log(procUri);
+    procs[procUri](args, cb);
+});
+
+// procedures
+var procs = {
+
+    'calc:square': function(args, cb) {
+        var result = squre(args);
+        cb(null, result);
+    },
+    'calc:add' : function(args, cb) {
+        var result = add(args);
+        cb(null, result);
+    },
+    'calc:sum' : function(args, cb) {
+        var result = sum(args);
+        cb(null, result);
+    },
+    'calc:string' : function(args, cb){
+        var result = string(args);
+        cb(null, result);
+    }
+
+
+};
+
+function squre(args){
+    return args*args;
+}
+
+function add(args){
+    var sum = 0;
+    for (var i = 0; i<args.length; i++){
+        sum += args[i];
+    }
+    return sum;
+}
+
+function sum(args){
+    // args is an array like Object (JSON)
+    var sum = 0;
+    var args = args[0];
+    for (var i = 0; i<args.length; i++){
+        sum += args[i];
+    }
+    return sum;
+}
+
+function string(args){
+    var args = args.shift();
+    var string = 'I am ' + args.name + ' and I am ' + args.age + ' years old';
+    return string;
+}
+
 server.listen(app.get('port'), function(){
     console.log("Express server listening on port " + app.get('port'));
 });
-
 

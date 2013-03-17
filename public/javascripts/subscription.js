@@ -18,17 +18,17 @@ window.onload = function() {
             sess = session;
             console.log("Connected to " + wsuri);
 
-            // subscribe to topic, providing an event handler
+// subscribe to topic, providing an event handler
 //            sess.subscribe("http://example.com/simple", onEvent);
-        },
+},
 
-        // WAMP session is gone
-        function (code, reason) {
+// WAMP session is gone
+function (code, reason) {
 
-            sess = null;
-            console.log("Connection lost (" + reason + ")");
-        }
-    );
+    sess = null;
+    console.log("Connection lost (" + reason + ")");
+}
+);
 };
 
 function onEvent(topic, event) {
