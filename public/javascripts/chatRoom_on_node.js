@@ -22,6 +22,8 @@ function onDOMReady(){
 
             sess.prefix("event", "http://localhost:" + PORT + "/events/myevents");
             sess.subscribe("event:firstevent", onEvent);
+            sess.subscribe("event:firstevent", onEvent1); // the same topic would not sent twice by Autobohn.js,
+            sess.subscribe("event:firstevent", onEvent2); // but it will regiter different callback
 //            sess.subscribe("http://localhost:" + PORT + "/events/myevents/firstevent", onEvent);
         },
 
@@ -44,7 +46,12 @@ function onEvent(topicUri, event) {
     console.log(event);
     appendMessage(event);
 }
-
+function onEvent1(topicUri, event) {
+    console.log('This is a callback from onEvent1');
+}
+function onEvent2(topicUri, event) {
+    console.log('This is a callback from onEvent2');
+}
 function publishEvent(){
     var excludeMe = true;
     sess.publish("event:firstevent", getMessage() || "", excludeMe);
