@@ -18,6 +18,7 @@ var express = require('express') //http://nodejs.org/api/modules.html#modules_mo
     , chatRoom_on_node = require('./routes/chatRoom_on_node.js') // testing if Ratchet supports Prefix
     , chat = require('./routes/chatPhpExample.js')
     , rpc = require('./routes/rpc.js')
+    , mutation = require('./routes/mutation.js')
     , user = require('./routes/user')
     , api = require('./routes/api')()
     , http = require('http')
@@ -54,7 +55,7 @@ app.configure('development', function(){
     app.use(express.errorHandler());
 });
 
-function middle(req, res, next) {
+function enableWamp(req, res, next) {
     req.wamp = wamp;
     next();
 }
@@ -67,13 +68,14 @@ app.get('/pubsub',subscribe_2.show);
 app.get('/chat',chat.show);
 app.get('/chatroom',chatRoom.show);
 app.get('/chatroom_on_node',chatRoom_on_node.show);
-app.get('/rpc', middle, rpc.show);
+app.get('/rpc', enableWamp, rpc.show);
+app.get('/mutation',enableWamp,mutation.show);
 
 // post methods
-app.post('/hub', middle, publish.show);
+app.post('/hub', enableWamp, publish.show);
 
+// rpc
 wamp.on('call',api.rpc.call);
-
 
 //wamp.on('call', function(procUri, args, cb) {
 //    if (! procs[procUri]) {

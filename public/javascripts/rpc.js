@@ -45,5 +45,5 @@ function run()
     sess.call("calc:sum", [1, 2, 3, 4, 5]).then(ab.log); // [ [1,2,3,4,5] ]
 
     // call a function with a JSON as arg
-    sess.call("calc:string",{'name':'Lauri','age':'17'}); // [ {'name':'Lauri','age':'17'} ]
+    sess.call("calc:string",{'name':'Lauri','age':'17'}).then(ab.log); // [ {'name':'Lauri','age':'17'} ]
 }

@@ -3,7 +3,8 @@
  * Date: 18/03/2013
  * Time: 10:00
  */
-module.exports = exports = function api_module(cfg){
+// what you export when a file is required.
+module.exports = function api_module(cfg){
     // procedures
     var procs = {
 
