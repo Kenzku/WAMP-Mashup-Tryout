@@ -70,7 +70,9 @@ app.get('/chatroom',chatRoom.show);
 app.get('/chatroom_on_node',chatRoom_on_node.show);
 app.get('/rpc', enableWamp, rpc.show);
 app.get('/mutation',enableWamp,mutation.show);
-
+app.get('/test', function(req,res){
+    res.sendfile(__dirname + '/public/test/sensorGenericAPITest.html');
+});
 // post methods
 app.post('/hub', enableWamp, publish.show);
 
