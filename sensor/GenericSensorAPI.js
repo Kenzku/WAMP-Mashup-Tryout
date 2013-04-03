@@ -5,36 +5,8 @@
  * Reference: http://dev.webinos.org/specifications/draft/sensors.html#::PendingSensorConfigOp
  */
 
-var EventFireMode = {
-    fixedInterval : "fixedinterval",
-    valueChange : "valuechange"
-}
+var Constant = require('./Constant');
 
-var ReturnAble = {
-    true : true,
-    false : false
-}
-
-var CancelAble = {
-    true : true,
-    false : false
-}
-
-var EventType = {
-    nothing : "nothing",
-    sensor : "sensor",
-    actuator : "actuator"
-}
-
-var State = {
-    original : 0
-}
-
-function GeoPosition() {
-    var latitude = 0.0;
-    var longitude = 0.0;
-    return {latitude:latitude,longitude:longitude};
-}
 /**
  *
  * @constructor
@@ -44,11 +16,11 @@ function GenericSensor() {
 
     self.sensorType = ""; // sensorType {String} e.g.
     self.sensorID = ""; // sensorId {String} sensor ID
-    self.returnable = ReturnAble.true;
+    self.returnable = Constant.ReturnAble.true;
     self.timeout = 100.0; // in milliseconds
     self.rate = 50.0; // in milliseconds
-    self.eventFireMode = EventFireMode.fixedInterval;
-    self.position = new GeoPosition(); // position {Object} Position of the sensor
+    self.eventFireMode = Constant.EventFireMode.fixedInterval;
+    self.position = new Constant.GeoPosition(); // position {Object} Position of the sensor
 
     /**
      * hardware properties
@@ -66,7 +38,7 @@ function GenericSensor() {
      * @param options {Object}
      */
     self.configureSensor = function (options){
-        for (option in options){
+        for (var option in options){
             switch (option) {
                 case "sensorType":
                     self.sensorType = options[option];
@@ -114,16 +86,17 @@ function GenericSensor() {
     self.sensorEvent = function () {
         var _self = this;
 
-        _self.type = EventType.nothing;
+        _self.type = Constant.EventType.nothing;
         _self.eventFireMode = self.eventFireMode;
         _self.position = self.position; // position {Object} Position of the sensor
         _self.sensorValue = {}; // sensorValues {Object} sensor values
-        _self.cancelable = CancelAble.false;
+        _self.cancelable = Constant.CancelAble.false;
+        /* {{_self.callback}} if actuator, no return value, but change the state; if sensor, return a JSON */
         _self.callback = null;
-        _self.state = State.original;
+        _self.state = Constant.State.original;
 
         _self.initSensorEvent = function(options){
-            for (option in options){
+            for (var option in options){
                 switch (option) {
                     case "type":
                         _self.type = options[option];
@@ -156,7 +129,6 @@ function GenericSensor() {
                     _self.actuate();
                     break;
                 case "sensor":
-                    // return sense data
                     return _self.sense();
                     break;
                 default:
@@ -172,12 +144,15 @@ function GenericSensor() {
             _self.callback();
             _self.state += 1;
         }
+
         _self.sense = function () {
-            if (_self.callback && typeof _self.callback === "function"){
-                _self.callback();
-            }
+            var temp = _self.callback();
+            _self.sensorValue = (typeof temp === 'object') ? temp : {};
+            return _self.sensorValue;
         }
     };
 };
+
+module.exports = GenericSensor;
 
 

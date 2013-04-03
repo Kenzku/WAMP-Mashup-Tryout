@@ -4,6 +4,9 @@
  * Time: 10:00
  */
 // what you export when a file is required.
+//    console.log(__dirname);
+var GenericSensor = require('../sensor/GenericSensorAPI');
+
 module.exports = function api_module(cfg){
     // procedures
     var procs = {
@@ -24,14 +27,14 @@ module.exports = function api_module(cfg){
             var result = string(args);
             cb(null, result);
         }
-
-
     };
+
     var init = function(cfg,callback){
         if (callback && isFunction(callback)){
             callback();
         }
     }
+
     if(cfg) {init(cfg);}
 
     function squre(args){
@@ -74,4 +77,5 @@ module.exports = function api_module(cfg){
             }
         }
     };
+
 }
