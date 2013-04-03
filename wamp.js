@@ -71,72 +71,14 @@ app.get('/chatroom_on_node',chatRoom_on_node.show);
 app.get('/rpc', enableWamp, rpc.show);
 app.get('/mutation',enableWamp,mutation.show);
 app.get('/test', function(req,res){
-    res.sendfile(__dirname + '/public/test/sensorGenericAPITest.html');
+//    res.sendfile(__dirname + '/public/test/sensorGenericAPITest.html');
+    res.sendfile(__dirname + '/public/test/rpcTest.html');
 });
 // post methods
 app.post('/hub', enableWamp, publish.show);
 
 // rpc
 wamp.on('call',api.rpc.call);
-
-//wamp.on('call', function(procUri, args, cb) {
-//    if (! procs[procUri]) {
-//        return cb('Unknown procedure: ' + procUri);
-//    }
-//    console.log('The the procedure URI is: ');
-//    console.log(procUri);
-//    procs[procUri](args, cb);
-//});
-
-// procedures
-//var procs = {
-//
-//    'calc:square': function(args, cb) {
-//        var result = squre(args);
-//        cb(null, result);
-//    },
-//    'calc:add' : function(args, cb) {
-//        var result = add(args);
-//        cb(null, result);
-//    },
-//    'calc:sum' : function(args, cb) {
-//        var result = sum(args);
-//        cb(null, result);
-//    },
-//    'calc:string' : function(args, cb){
-//        var result = string(args);
-//        cb(null, result);
-//    }
-//
-//};
-//
-//function squre(args){
-//    return args*args;
-//}
-//
-//function add(args){
-//    var sum = 0;
-//    for (var i = 0; i<args.length; i++){
-//        sum += args[i];
-//    }
-//    return sum;
-//}
-//
-//function sum(args){
-//    // args is an array like Object (JSON)
-//    var sum = 0;
-//    var args = args[0];
-//    for (var i = 0; i<args.length; i++){
-//        sum += args[i];
-//    }
-//    return sum;
-//}
-//
-//function string(args){
-//    var args = args.shift();
-//    var string = 'I am ' + args.name + ' and I am ' + args.age + ' years old';
-//    return {'name':'Salla','age':16, 'you':string};
-//}
 
 server.listen(app.get('port'), function(){
     console.log("Express server listening on port " + app.get('port'));

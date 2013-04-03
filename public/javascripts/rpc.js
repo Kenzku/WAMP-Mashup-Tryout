@@ -5,19 +5,19 @@
  */
 // WAMP session object
 var sess;
-var PORT = "3000"
-window.onload = function() {
+var PORT = "3000";
+window.onload = init;
 
+function init (){
     // connect to WAMP server
     ab.connect("ws://localhost:" + PORT,
 
         // WAMP session was established
         function (session) {
 
-            // things to do once the session has been established
+            // {{ab.Session}} things to do once the session has been established
             sess = session;
             console.log("Connected!");
-
             // establish a prefix, so we can abbreviate procedure URIs ..
             session.prefix("calc", "http://localhost" + PORT + "/simple/calc#");
         },
@@ -30,7 +30,7 @@ window.onload = function() {
             console.log(reason);
         }
     );
-};
+}
 
 function run()
 {
