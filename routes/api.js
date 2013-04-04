@@ -26,7 +26,11 @@ module.exports = function api_module(cfg){
         'calc:string' : function(args, cb){
             var result = string(args);
             cb(null, result);
+        },
+        'sensor:init' : function(args,cb){
+            
         }
+
     };
 
     var init = function(cfg,callback){

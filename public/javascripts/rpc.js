@@ -14,7 +14,6 @@ function init (){
 
         // WAMP session was established
         function (session) {
-
             // {{ab.Session}} things to do once the session has been established
             sess = session;
             console.log("Connected!");
@@ -36,10 +35,15 @@ function run()
 {
     // Note: arg will become an array like Object (JSON)
     // call a function and log result on success
-    sess.call("calc:square", 23).then(ab.log); // [23]
-
+//    sess.call("calc:square", 23).then(ab.log); // [23]
+    sess.call("calc:square", 23).then(
+        // RPC success callback
+        function(result){
+            square = result;
+        }
+    );
     // call a function with multiple arguments
-    sess.call("http://localhost" + PORT + "/simple/calc#add", 23, 7).then(ab.log); // [23, 7]
+    sess.call("calc:add", 23, 7).then(ab.log); // [23, 7]
 
     // call a function with list of numbers as arg
     sess.call("calc:sum", [1, 2, 3, 4, 5]).then(ab.log); // [ [1,2,3,4,5] ]

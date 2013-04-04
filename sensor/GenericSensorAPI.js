@@ -14,11 +14,11 @@ var Constant = require('./Constant');
 function GenericSensor() {
     var self = this;
 
-    self.sensorType = ""; // sensorType {String} e.g.
-    self.sensorID = ""; // sensorId {String} sensor ID
+    self.sensorType = Constant.SensorSpec.type.default; // sensorType {String} e.g.
+    self.sensorID = Constant.SensorSpec.default.did; // sensorId {String} sensor ID
     self.returnable = Constant.ReturnAble.true;
-    self.timeout = 100.0; // in milliseconds
-    self.rate = 50.0; // in milliseconds
+    self.timeout = Constant.SensorSpec.default.timeout; // in milliseconds
+    self.rate = Constant.SensorSpec.default.rate; // in milliseconds
     self.eventFireMode = Constant.EventFireMode.fixedInterval;
     self.position = new Constant.GeoPosition(); // position {Object} Position of the sensor
 
@@ -26,12 +26,12 @@ function GenericSensor() {
      * hardware properties
      * @type {null}
      */
-    self.maximumRange = null;
-    self.minDelay = null;
-    self.power = null;
-    self.resolution = null;
-    self.vendor = null;
-    self.version = null;
+    self.maximumRange = Constant.SensorSpec.default.hardware;
+    self.minDelay = Constant.SensorSpec.default.hardware;
+    self.power = Constant.SensorSpec.default.hardware;
+    self.resolution = Constant.SensorSpec.default.hardware;
+    self.vendor = Constant.SensorSpec.default.hardware;
+    self.version = Constant.SensorSpec.default.hardware;
 
     /**
      * configuration object
@@ -89,10 +89,14 @@ function GenericSensor() {
         _self.type = Constant.EventType.nothing;
         _self.eventFireMode = self.eventFireMode;
         _self.position = self.position; // position {Object} Position of the sensor
-        _self.sensorValue = {}; // sensorValues {Object} sensor values
+        _self.sensorValue = Constant.SensorSpec.default.data; // sensorValues {Object} sensor values
         _self.cancelable = Constant.CancelAble.false;
         /* {{_self.callback}} if actuator, no return value, but change the state; if sensor, return a JSON */
         _self.callback = null;
+        /**
+         * Use for actuator, denoting the change of its state
+         * @type {*}
+         */
         _self.state = Constant.State.original;
 
         _self.initSensorEvent = function(options){

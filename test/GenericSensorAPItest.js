@@ -144,7 +144,8 @@ test("GenericSensor.sensorEvent - property", function() {
     assert.equal(aSensorEvent.type, "nothing");
     assert.equal(aSensorEvent.eventFireMode,aGenericSensor.eventFireMode);
     assert.deepEqual(aSensorEvent.position,aGenericSensor.position);
-    assert.deepEqual(aSensorEvent.sensorValue, {});
+    assert.deepEqual(aSensorEvent.sensorValue, Constant.SensorSpec.default.data);
+    assert.deepEqual(aSensorEvent.sensorValue, null);
     assert.equal(aSensorEvent.cancelable,Constant.CancelAble.false);
     assert.deepEqual(aSensorEvent.callback,null);
 });
