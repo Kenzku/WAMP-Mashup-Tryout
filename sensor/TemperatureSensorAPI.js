@@ -20,7 +20,7 @@ function TemperatureSensor(configuration) {
     /**
      * Tell the sensor what to do.
      * This might be an asynchronous function
-     * @return {JSON}
+     * @return {{}}
      */
     self.updateTemperatureOnSensor = function () {
         /* Need To Do */
@@ -49,12 +49,12 @@ function TemperatureSensor(configuration) {
     };
     /**
      * the sensor configuration
-     * @type {JSON}
+     * @type {{}}
      */
     self.configuration = Constant.SensorSpec.default.config;
     /**
      * should referece GenericSensorAPI
-     * @type {JSON}
+     * @type {{}}
      * @param configuration
      */
     self.config = function (configuration) {
@@ -84,7 +84,7 @@ function TemperatureSensor(configuration) {
                 sensorValue : self.temperature,
                 cancelable: configuration.cancelable || Constant.CancelAble.false,
                 // validation will be check in GenericSensorAPI
-                callback : configuration.callback || self.updateTemperatureOnSensor
+                callback : self.updateTemperatureOnSensor
             };
             self.aSensorEvent.initSensorEvent(options);
         }else{
@@ -116,7 +116,12 @@ function TemperatureSensor(configuration) {
             cancelable: self.aSensorEvent.cancelable
         }
     };
-
+    /**
+     * return temperature data
+     * but if 'isInit' true, returns default configuration when initialise an object
+     * @param isInit {boolean}
+     * @returns {{}}
+     */
     self.getData = function (isInit){
         if(isInit){
             return self.configuration;

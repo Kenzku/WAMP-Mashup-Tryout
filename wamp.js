@@ -53,7 +53,7 @@ app.configure(function(){
 app.configure('development', function(){
     app.use(express.errorHandler());
 });
-
+// middleware
 function enableWamp(req, res, next) {
     req.wamp = wamp;
     next();
@@ -79,7 +79,7 @@ app.post('/hub', enableWamp, publish.show);
 
 // rpc
 //wamp.on('call',api_tryout.rpc.call); // enable this if want to test rpc on WAMP
-wamp.on('call',api.rpc.call);
+wamp.on('call', api.rpc.call);
 
 server.listen(app.get('port'), function(){
     console.log("Express server listening on port " + app.get('port'));

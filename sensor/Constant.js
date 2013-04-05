@@ -59,6 +59,12 @@ exports.SensorSpec = {
     }
 }
 
+exports.Error = {
+    reset : {
+        NO_INIT : 'You can\'t initialise, because the sensor hasn\'t been initialised.'
+    }
+}
+
 exports.GeoPosition = function () {
     var latitude = 0.0;
     var longitude = 0.0;

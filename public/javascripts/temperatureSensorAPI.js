@@ -39,8 +39,22 @@ function initSensor(type,config,callback) {
         successCB.callback = callback;
     }
     sess.call('sensor:init',args).then(successCB);
+
+    // RPC success callback
+    function successCB (res){
+        successCB.callback(res);
+    }
 }
-// RPC success callback
-function successCB (res){
-    successCB.callback(res);
+
+function resetSensor(callback) {
+    if (callback && typeof callback === 'function'){
+        successCB.callback = callback;
+    }
+    sess.call('sensor:reset').then(successCB);
+
+    // RPC success callback
+    function successCB (res){
+        successCB.callback(res);
+    }
 }
+

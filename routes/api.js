@@ -5,6 +5,8 @@
  */
 var TemperatureSensor = require('../sensor/TemperatureSensorAPI');
 var GenericSensor = require('../sensor/GenericSensorAPI');
+var Constant = require('../sensor/Constant');
+
 // temperature sensor
 var aSensor;
 
@@ -19,10 +21,12 @@ module.exports = function api_module(cfg){
         'sensor:init' : function(args,cb){
             var args = args.shift();
             var result = init(args);
+            // cb (err, successResult);
             cb(null,result);
         },
-        'sensor:config' : function(args,cv){
-            
+        'sensor:reset' : function(args,cb){
+            var result = reset();
+            reset() ? cb(null,result) : cb(Constant.Error.reset.NO_INIT);
         }
     };
 
@@ -53,6 +57,12 @@ function whichSensor(args){
     switch (type) {
         case 'temperature':
             if(config && typeof config === 'object'){
+                console.log(config);
+                if(config.callback){
+                    // for safety reason, even though functions will be eliminated
+                    delete config.callback;
+                }
+                console.log(config);
                 return new TemperatureSensor(config);
             } else{
                 return new TemperatureSensor();
@@ -71,4 +81,16 @@ function init (args) {
     }else{
         return null;
     }
+}
+
+function reset(){
+    if(!aSensor){
+        return false;
+    }
+    aSensor.resetSensorState();
+    return aSensor.getData(true);
+}
+
+function getCallBackOnSensor(){
+    return aSensor.aSensorEvent.callback;
 }
