@@ -44,8 +44,14 @@ function TemperatureSensor(configuration) {
         self.aGenericSensor = new GenericSensor();
         self.aSensorEvent = new self.aGenericSensor.sensorEvent();
         self.temperature = Constant.SensorSpec.default.data;
+        self.configuration = Constant.SensorSpec.default.config;
         self.config();
     };
+    /**
+     * the sensor configuration
+     * @type {JSON}
+     */
+    self.configuration = Constant.SensorSpec.default.config;
     /**
      * should referece GenericSensorAPI
      * @type {JSON}
@@ -89,6 +95,33 @@ function TemperatureSensor(configuration) {
             };
             self.aGenericSensor.configureSensor(options);
             self.aSensorEvent.initSensorEvent(options);
+        }
+        // set configuration
+        self.configuration = {
+            sensorType: self.aGenericSensor.sensorType,
+            sensorID: self.aGenericSensor.sensorID,
+            returnable: self.aGenericSensor.returnable,
+            timeout: self.aGenericSensor.timeout,
+            rate: self.aGenericSensor.rate,
+            eventFireMode: self.aGenericSensor.eventFireMode,
+            position: self.aGenericSensor.position,
+            maximumRange : self.aGenericSensor.maximumRange,
+            minDelay : self.aGenericSensor.minDelay,
+            power : self.aGenericSensor.power,
+            resolution : self.aGenericSensor.resolution,
+            vendor : self.aGenericSensor.vendor,
+            version : self.aGenericSensor.version,
+
+            type : self.aSensorEvent.type,
+            cancelable: self.aSensorEvent.cancelable
+        }
+    };
+
+    self.getData = function (isInit){
+        if(isInit){
+            return self.configuration;
+        }else{
+            return {data:self.temperature};
         }
     };
 

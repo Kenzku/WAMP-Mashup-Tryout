@@ -20,6 +20,7 @@ var express = require('express') //http://nodejs.org/api/modules.html#modules_mo
     , rpc = require('./routes/rpc.js')
     , mutation = require('./routes/mutation.js')
     , user = require('./routes/user')
+    , api_tryout = require('./routes/api_tryout')()
     , api = require('./routes/api')()
     , http = require('http')
     , path = require('path')
@@ -32,9 +33,7 @@ var app = express();
 // http.createServer(app) returns a server, "app" is called whenever an http request comes in
 var server = http.createServer(app);
 var wss = new WebSocketServer({server:server});
-//var io = require('socket.io').listen(server);
 var wamp = wampServer.attach(wss);
-
 
 app.configure(function(){
     app.set('port', process.env.PORT || 3000);
@@ -72,12 +71,14 @@ app.get('/rpc', enableWamp, rpc.show);
 app.get('/mutation',enableWamp,mutation.show);
 app.get('/test', function(req,res){
 //    res.sendfile(__dirname + '/public/test/sensorGenericAPITest.html');
-    res.sendfile(__dirname + '/public/test/rpcTest.html');
+//    res.sendfile(__dirname + '/public/test/rpcTest.html');
+    res.sendfile(__dirname + '/public/test/temperatureSensorTest.html');
 });
 // post methods
 app.post('/hub', enableWamp, publish.show);
 
 // rpc
+//wamp.on('call',api_tryout.rpc.call); // enable this if want to test rpc on WAMP
 wamp.on('call',api.rpc.call);
 
 server.listen(app.get('port'), function(){

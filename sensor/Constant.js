@@ -37,7 +37,8 @@ exports.SensorSpec = {
         ts : null,
         timeout : 100.0,
         rate : 50.0,
-        hardware : null
+        hardware : null,
+        config : null
     },
     cid : {
         temperature: 0,

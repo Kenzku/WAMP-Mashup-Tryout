@@ -39,7 +39,7 @@ function run()
     sess.call("calc:square", 23).then(
         // RPC success callback
         function(result){
-            square = result;
+            console.log("this is return: "  + result);
         }
     );
     // call a function with multiple arguments
