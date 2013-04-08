@@ -46,9 +46,6 @@ function TemperatureSensor(configuration) {
             },
             // error CB
             function(err){
-                /* NOT TESTED YET */
-                console.log('@$@#%#$^#!$$@#!$SFXVDFSGDFGDFGDFSGDFSG');
-                console.log(errorCallback);
                 if (errorCallback && typeof errorCallback === 'function'){
                     errorCallback(err);
                 }
