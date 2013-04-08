@@ -34,9 +34,12 @@ module.exports = function api_module(cfg){
             result ? cb(null,result) : cb(Constant.Error.reset.NO_INIT);
         },
         'sensor:getData' : function(args,cb) {
-            getData(successCB);
+            getData(successCB,errorCB);
             function successCB(data){
                 cb(null,data);
+            }
+            function errorCB(err){
+                cb(err);
             }
         }
     };
@@ -102,22 +105,18 @@ function reset(){
     return aSensor.getData(true);
 }
 
-function getData(callback) {
+function getData(successfulCallback,errorCallback) {
     if(!aSensor){
         return false;
     }
-    requestDataFromSensor(callback);
+    requestDataFromSensor(successfulCallback,errorCallback);
     // return true does not mean that it is successful to retrieve data
     return true;
 }
 
-function requestDataFromSensor(callback){
+function requestDataFromSensor(successfulCallback,errorCallback){
     if(!aSensor){
         return false;
     }
-    aSensor.currentTemperature(callback);
-}
-
-function getCallBackOnSensor(){
-    return aSensor.aSensorEvent.callback;
+    aSensor.currentTemperature(successfulCallback,errorCallback);
 }

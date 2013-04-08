@@ -78,12 +78,15 @@ function resetSensor(callback) {
  * @param callback success callback
  * with the returned data as its parameter
  */
-function getData(callback) {
-    if (callback && typeof callback === 'function'){
-        successCB.callback = callback;
+function getData(successfulCallback,errorCallback) {
+    if (successfulCallback && typeof successfulCallback === 'function'){
+        successCB.successfulCallback = successfulCallback;
+    }
+    if (errorCallback && typeof errorCallback === 'function'){
+        errorCB.errorCallback = errorCallback;
     }
 
-    sess.call('sensor:getData1').then(successCB);
+    sess.call('sensor:getData').then(successCB,errorCB);
 
     /**
      * RPC success callback
@@ -91,7 +94,11 @@ function getData(callback) {
      */
     function successCB (res){
         console.log(res);
-        successCB.callback(res);
+        successCB.successfulCallback(res);
+    }
+    function errorCB (err) {
+        console.log(err);
+        errorCB.errorCallback(err);
     }
 }
 

@@ -5,6 +5,7 @@
  */
 var GenericSensor = require('../sensor/GenericSensorAPI');
 var Constant = require('../sensor/Constant');
+var CouchDB = require('../db/CouchDB');
 
 function TemperatureSensor(configuration) {
     var self = this;
@@ -25,22 +26,41 @@ function TemperatureSensor(configuration) {
      * Generic Sensor API
      * @return {{}}
      */
-    self.updateTemperatureOnSensor = function (successfulCallback) {
-        /* Need To Do */
-        var data = {c0 :5};
-        if (successfulCallback && typeof successfulCallback === 'function'){
-            self.aSensorEvent.sensorValue = data;
-            self.temperature = self.aSensorEvent.sensorValue;
-            successfulCallback(data);
-        }
+    self.updateTemperatureOnSensor = function (successfulCallback,errorCallback) {
+        /* Need To Do - currently testing on one sample data */
+        var aCouchDB = new CouchDB();
+        aCouchDB.readDocument(self.aGenericSensor.sensorID,
+            // success CB
+            function(body){
+                if (successfulCallback && typeof successfulCallback === 'function'){
+                    var data;
+                    if(!body.data) {
+                        data = Constant.SensorSpec.default.data;
+                    }else{
+                        data = body.data.c0 ? { c0: body.data.c0 } : Constant.SensorSpec.default.data;
+                    }
+                    self.aSensorEvent.sensorValue = data;
+                    self.temperature = self.aSensorEvent.sensorValue;
+                    successfulCallback(data);
+                }
+            },
+            // error CB
+            function(err){
+                /* NOT TESTED YET */
+                console.log('@$@#%#$^#!$$@#!$SFXVDFSGDFGDFGDFSGDFSG');
+                console.log(errorCallback);
+                if (errorCallback && typeof errorCallback === 'function'){
+                    errorCallback(err);
+                }
+            });
     };
     /**
      * Ask the sensor to do an Action
      * This might be an asynchronous function
      * @return {number}
      */
-    self.currentTemperature = function (successfulCallback) {
-        self.aSensorEvent.doAction(successfulCallback);
+    self.currentTemperature = function (successfulCallback,errorCallback) {
+        self.aSensorEvent.doAction(successfulCallback,errorCallback);
     };
     /**
      * reset current sensor state

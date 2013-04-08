@@ -8,6 +8,7 @@ var expect = require('chai').expect;
 var TemperatureSensor = require('../sensor/TemperatureSensorAPI');
 var GenericSensor = require('../sensor/GenericSensorAPI');
 var Constant = require('../sensor/Constant');
+var CouchDB = require('../db/CouchDB');
 
 function ok(expr, msg) {
     if (!expr) throw new Error(msg);
@@ -119,7 +120,7 @@ test("properties - without configuration", function() {
 
 });
 
-test("properties - with configuration",function(){
+test("properties - with configuration",function(done){
     var configuration = {
         sensorType:"temperature",
         sensorID:"12314213432432423154235",
@@ -244,24 +245,29 @@ test("properties - with configuration",function(){
     /* callback function's behaviour */
     expect(aTemperatureSensor.aSensorEvent.callback).to.be.a('function');
     /* callback function on Generic Sensor API - on the sensor */
-    var result = aTemperatureSensor.aSensorEvent.callback(successCB_1);
+    var result = aTemperatureSensor.aSensorEvent.callback(successCB_1,errorCB);
     /* doAction on Generic Sensor API - on the sensor */
-    var result = aTemperatureSensor.currentTemperature(successCB_2);
+    var result = aTemperatureSensor.currentTemperature(successCB_2,errorCB);
 
     function successCB_1(result){
-        assert.deepEqual(result, {c0 :5});
+        assert.deepEqual(result, null);
     }
     function successCB_2(result){
-        assert.deepEqual(result,{c0 :5});
+        assert.deepEqual(result,null);
         assert.deepEqual(result,aTemperatureSensor.temperature);
-        assert.deepEqual(aTemperatureSensor.aSensorEvent.sensorValue,{c0:5});
+        assert.deepEqual(aTemperatureSensor.aSensorEvent.sensorValue,null);
+        done();
+    }
+    function errorCB (err){
+        assert.ok;
+        done();
     }
 });
 
-test("properties - callback test - updateTemperatureOnSensor",function(){
+test("properties - callback test - updateTemperatureOnSensor",function(done){
     var configuration = {
         sensorType:"temperature",
-        sensorID:"12314213432432423154235",
+        sensorID:"bd27134d93f07d65d244e502971f5573",
         returnable: Constant.ReturnAble.false,
         timeout:200.0,
         rate:20.0,
@@ -286,10 +292,32 @@ test("properties - callback test - updateTemperatureOnSensor",function(){
     expect(aTemperatureSensor.aSensorEvent.callback).to.be.a('function');
 
     /* callback function on Generic Sensor API - on the sensor */
-    aTemperatureSensor.aSensorEvent.callback(successCB);
+    aTemperatureSensor.aSensorEvent.callback(successCB,errorCB);
     // because callback setting has been disabled in 'TemperatureSensor'
 
     function successCB(result){
-        assert.deepEqual(result, {c0 :5});
+        assert.deepEqual(result, {c0 :'23'});
+        done();
     }
+    function errorCB(err){
+        // there will be output done by 'nano.js', which is out of my control
+        // trigger by e.g. sensorID:"12314213432432423154235" - wrong id
+        assert.ok;
+        done();
+    }
+});
+
+test('CouchDB - connection',function(done){
+    var aCouchDB = new CouchDB();
+    aCouchDB.readDocument('bd27134d93f07d65d244e502971f5573',
+        // success CB
+        function(body){
+            assert.ok;
+            done();
+        },
+        // error CB
+        function(err){
+            assert.ok;
+            done();
+        });
 });
