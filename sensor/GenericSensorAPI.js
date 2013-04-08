@@ -127,13 +127,13 @@ function GenericSensor() {
             }
         }
 
-        _self.doAction = function () {
+        _self.doAction = function (successfulCallback) {
             switch (_self.type) {
                 case "actuator":
-                    _self.actuate();
+                    _self.actuate(successfulCallback);
                     break;
                 case "sensor":
-                    return _self.sense();
+                    return _self.sense(successfulCallback);
                     break;
                 default:
                     return null;
@@ -144,15 +144,16 @@ function GenericSensor() {
          * I am not sure this part
          * do I need callback, or do I need predefine functions?
          */
-        _self.actuate = function () {
-            _self.callback();
+        _self.actuate = function (successfulCallback) {
+            _self.callback(successfulCallback);
+            /* NEED TO PUT INTO CALLBACK, LET THE CB UPDATE THE STATE */
             _self.state += 1;
         }
 
-        _self.sense = function () {
-            var temp = _self.callback();
-            _self.sensorValue = (typeof temp === 'object') ? temp : {};
-            return _self.sensorValue;
+        _self.sense = function (successfulCallback) {
+            _self.callback(successfulCallback);
+//            _self.sensorValue = (typeof temp === 'object') ? temp : {};
+//            return _self.sensorValue;
         }
     };
 };

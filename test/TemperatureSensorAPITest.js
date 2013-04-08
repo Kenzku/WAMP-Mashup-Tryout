@@ -44,7 +44,7 @@ test("properties - without configuration", function() {
     assert.equal(aTemperatureSensor.temperature, Constant.SensorSpec.default.data);
     assert.equal(aTemperatureSensor.temperature, null);
     assert.deepEqual(aTemperatureSensor.getData(true),configInSensor);
-    assert.deepEqual(aTemperatureSensor.getData(), {data:null});
+    assert.deepEqual(aTemperatureSensor.getData(), true);
 
     /* configuration */
     assert.equal(aTemperatureSensor.aGenericSensor.sensorType, Constant.SensorSpec.type.temperature);
@@ -213,7 +213,7 @@ test("properties - with configuration",function(){
     assert.equal(aTemperatureSensor.temperature, Constant.SensorSpec.default.data);
     assert.equal(aTemperatureSensor.temperature, null);
     assert.deepEqual(aTemperatureSensor.getData(true),OriginalConfigInSensor);
-    assert.deepEqual(aTemperatureSensor.getData(), {data:null});
+    assert.deepEqual(aTemperatureSensor.getData(), true);
 
     /* configuration */
     assert.equal(aTemperatureSensor.aGenericSensor.sensorType, Constant.SensorSpec.type.temperature);
@@ -244,17 +244,21 @@ test("properties - with configuration",function(){
     /* callback function's behaviour */
     expect(aTemperatureSensor.aSensorEvent.callback).to.be.a('function');
     /* callback function on Generic Sensor API - on the sensor */
-    var result = aTemperatureSensor.aSensorEvent.callback();
-    assert.deepEqual(result,{c0 :5});
+    var result = aTemperatureSensor.aSensorEvent.callback(successCB_1);
     /* doAction on Generic Sensor API - on the sensor */
-    var result = aTemperatureSensor.currentTemperature();
-    assert.deepEqual(result,{c0 :5});
-    assert.deepEqual(result,aTemperatureSensor.temperature);
-    assert.deepEqual(aTemperatureSensor.aSensorEvent.sensorValue,{c0:5});
-    assert.deepEqual(aTemperatureSensor.getData(), {data:{c0 :5}});
+    var result = aTemperatureSensor.currentTemperature(successCB_2);
+
+    function successCB_1(result){
+        assert.deepEqual(result, {c0 :5});
+    }
+    function successCB_2(result){
+        assert.deepEqual(result,{c0 :5});
+        assert.deepEqual(result,aTemperatureSensor.temperature);
+        assert.deepEqual(aTemperatureSensor.aSensorEvent.sensorValue,{c0:5});
+    }
 });
 
-test("properties - callback test",function(){
+test("properties - callback test - updateTemperatureOnSensor",function(){
     var configuration = {
         sensorType:"temperature",
         sensorID:"12314213432432423154235",
@@ -282,7 +286,10 @@ test("properties - callback test",function(){
     expect(aTemperatureSensor.aSensorEvent.callback).to.be.a('function');
 
     /* callback function on Generic Sensor API - on the sensor */
-    var result = aTemperatureSensor.aSensorEvent.callback();
+    aTemperatureSensor.aSensorEvent.callback(successCB);
     // because callback setting has been disabled in 'TemperatureSensor'
-    assert.deepEqual(result,{"c0":5});
+
+    function successCB(result){
+        assert.deepEqual(result, {c0 :5});
+    }
 });

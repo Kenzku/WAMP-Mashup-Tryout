@@ -24,9 +24,20 @@ module.exports = function api_module(cfg){
             // cb (err, successResult);
             cb(null,result);
         },
+        /**
+         * reset sensor state
+         * @param args NOT IN USE
+         * @param cb callback function when reset success or failed
+         */
         'sensor:reset' : function(args,cb){
             var result = reset();
-            reset() ? cb(null,result) : cb(Constant.Error.reset.NO_INIT);
+            result ? cb(null,result) : cb(Constant.Error.reset.NO_INIT);
+        },
+        'sensor:getData' : function(args,cb) {
+            getData(successCB);
+            function successCB(data){
+                cb(null,data);
+            }
         }
     };
 
@@ -57,12 +68,12 @@ function whichSensor(args){
     switch (type) {
         case 'temperature':
             if(config && typeof config === 'object'){
-                console.log(config);
+                // console.log(config);
                 if(config.callback){
                     // for safety reason, even though functions will be eliminated
                     delete config.callback;
                 }
-                console.log(config);
+                // console.log(config);
                 return new TemperatureSensor(config);
             } else{
                 return new TemperatureSensor();
@@ -89,6 +100,22 @@ function reset(){
     }
     aSensor.resetSensorState();
     return aSensor.getData(true);
+}
+
+function getData(callback) {
+    if(!aSensor){
+        return false;
+    }
+    requestDataFromSensor(callback);
+    // return true does not mean that it is successful to retrieve data
+    return true;
+}
+
+function requestDataFromSensor(callback){
+    if(!aSensor){
+        return false;
+    }
+    aSensor.currentTemperature(callback);
 }
 
 function getCallBackOnSensor(){

@@ -19,21 +19,28 @@ function TemperatureSensor(configuration) {
 
     /**
      * Tell the sensor what to do.
-     * This might be an asynchronous function
+     * This might be an asynchronous callback function
+     * when configure the sensor,
+     * this function will be automatically inject into
+     * Generic Sensor API
      * @return {{}}
      */
-    self.updateTemperatureOnSensor = function () {
+    self.updateTemperatureOnSensor = function (successfulCallback) {
         /* Need To Do */
-         return {c0 :5};
+        var data = {c0 :5};
+        if (successfulCallback && typeof successfulCallback === 'function'){
+            self.aSensorEvent.sensorValue = data;
+            self.temperature = self.aSensorEvent.sensorValue;
+            successfulCallback(data);
+        }
     };
     /**
      * Ask the sensor to do an Action
      * This might be an asynchronous function
      * @return {number}
      */
-    self.currentTemperature = function () {
-        self.temperature = self.aSensorEvent.doAction();
-        return self.temperature;
+    self.currentTemperature = function (successfulCallback) {
+        self.aSensorEvent.doAction(successfulCallback);
     };
     /**
      * reset current sensor state
@@ -120,13 +127,16 @@ function TemperatureSensor(configuration) {
      * return temperature data
      * but if 'isInit' true, returns default configuration when initialise an object
      * @param isInit {boolean}
-     * @returns {{}}
+     * @returns {{}} if isInit is true, otherwise return true.
      */
-    self.getData = function (isInit){
+    self.getData = function (isInit,successfulCallback){
         if(isInit){
             return self.configuration;
         }else{
-            return {data:self.temperature};
+            if (successfulCallback && typeof successfulCallback === 'function'){
+                successfulCallback({data:self.temperature});
+            }
+            return true;
         }
     };
 

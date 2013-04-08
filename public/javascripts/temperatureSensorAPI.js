@@ -29,7 +29,13 @@ function init (){
         }
     );
 }
-
+/**
+ * initialise a sensor
+ * @param type {String} either 'sensor' or 'actuator'
+ * @param config {{}}, a JSON object of the configuration
+ * @param callback success callback
+ * with the returned data as its parameter
+ */
 function initSensor(type,config,callback) {
     var args = config && typeof config == 'object' ?
         [type,config] :
@@ -40,20 +46,51 @@ function initSensor(type,config,callback) {
     }
     sess.call('sensor:init',args).then(successCB);
 
-    // RPC success callback
+    /**
+     * RPC success callback
+     * @param res the data that the server transfer
+     */
     function successCB (res){
         successCB.callback(res);
     }
 }
-
+/**
+ * reset sensor state
+ * @param callback success callback
+ * with the returned data as its parameter
+ */
 function resetSensor(callback) {
     if (callback && typeof callback === 'function'){
         successCB.callback = callback;
     }
     sess.call('sensor:reset').then(successCB);
 
-    // RPC success callback
+    /**
+     * RPC success callback
+     * @param res the data that the server transfer
+     */
     function successCB (res){
+        successCB.callback(res);
+    }
+}
+/**
+ * get data from a sensor
+ * @param callback success callback
+ * with the returned data as its parameter
+ */
+function getData(callback) {
+    if (callback && typeof callback === 'function'){
+        successCB.callback = callback;
+    }
+
+    sess.call('sensor:getData1').then(successCB);
+
+    /**
+     * RPC success callback
+     * @param res the data that the server transfer
+     */
+    function successCB (res){
+        console.log(res);
         successCB.callback(res);
     }
 }
