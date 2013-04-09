@@ -13,14 +13,12 @@ function CouchDB () {
         db.get(id, function(err, body) {
             if (err) {
                 errorCallback(err);
-                return console.log(err);
             }
             else {
                 successfulCallback(body);
             }
         });
     }
-
 }
 
 module.exports = CouchDB;

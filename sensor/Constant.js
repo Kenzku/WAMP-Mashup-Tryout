@@ -29,7 +29,7 @@ exports.State = {
     original : 0
 }
 
-exports.SensorSpec = {
+exports.ComponentSpec = {
     default : {
         data: null,
         did : "",
@@ -38,7 +38,18 @@ exports.SensorSpec = {
         timeout : 100.0,
         rate : 50.0,
         hardware : null,
-        config : null
+        config : null,
+        switchMode : {
+            onoff : 'onoff',
+            dial : 'dial'
+        },
+        dial : {
+            strength : ( 0 % 100 ) / 100
+        },
+        switch : {
+            on : true,
+            off : false
+        }
     },
     cid : {
         temperature: 0,
@@ -50,12 +61,17 @@ exports.SensorSpec = {
     },
     type : {
         default : "",
-        temperature: 'temperature',
-        humidity : 'humidity',
-        pressure : 'pressure',
-        location : 'location',
-        accelerometer : 'accelerometer',
-        multimedia : 'multimedia'
+        sensor : {
+            temperature: 'temperature',
+            humidity : 'humidity',
+            pressure : 'pressure',
+            location : 'location',
+            accelerometer : 'accelerometer',
+            multimedia : 'multimedia'
+        },
+        actuator : {
+            switch : 'switch'
+        }
     }
 }
 

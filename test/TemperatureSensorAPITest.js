@@ -6,7 +6,7 @@
 var assert = require("assert");
 var expect = require('chai').expect;
 var TemperatureSensor = require('../sensor/TemperatureSensorAPI');
-var GenericSensor = require('../sensor/GenericSensorAPI');
+var GenericComponent = require('../sensor/GenericComponentAPI');
 var Constant = require('../sensor/Constant');
 var CouchDB = require('../db/CouchDB');
 
@@ -18,11 +18,11 @@ suite("Temperature Sensor");
 
 test("properties - without configuration", function() {
     var aTemperatureSensor = new TemperatureSensor();
-    var aGenericSensor = new GenericSensor();
+    var aGenericComponent = new GenericComponent();
 
     var configInSensor = {
-        sensorType: "temperature",
-        sensorID: "",
+        componentType: "temperature",
+        deviceID: "",
         returnable: true,
         timeout: 100.0,
         rate: 50.0,
@@ -40,45 +40,45 @@ test("properties - without configuration", function() {
     };
 
     /* property */
-    assert.ok(aTemperatureSensor.aGenericSensor instanceof GenericSensor);
-    assert.ok(aTemperatureSensor.aSensorEvent instanceof aTemperatureSensor.aGenericSensor.sensorEvent);
-    assert.equal(aTemperatureSensor.temperature, Constant.SensorSpec.default.data);
+    assert.ok(aTemperatureSensor.aGenericComponent instanceof GenericComponent);
+    assert.ok(aTemperatureSensor.aComponentEvent instanceof aTemperatureSensor.aGenericComponent.componentEvent);
+    assert.equal(aTemperatureSensor.temperature, Constant.ComponentSpec.default.data);
     assert.equal(aTemperatureSensor.temperature, null);
     assert.deepEqual(aTemperatureSensor.getData(true),configInSensor);
     assert.deepEqual(aTemperatureSensor.getData(), true);
 
     /* configuration */
-    assert.equal(aTemperatureSensor.aGenericSensor.sensorType, Constant.SensorSpec.type.temperature);
-    assert.equal(aTemperatureSensor.aGenericSensor.sensorType, "temperature");
-    assert.equal(aTemperatureSensor.aGenericSensor.sensorID,"");
-    assert.equal(aTemperatureSensor.aGenericSensor.returnable,true);
-    assert.equal(aTemperatureSensor.aGenericSensor.timeout,100.0);
-    assert.equal(aTemperatureSensor.aGenericSensor.rate, 50.0);
-    assert.equal(aTemperatureSensor.aGenericSensor.eventFireMode,"fixedinterval");
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.position,{latitude:0.0,longitude:0.0});
+    assert.equal(aTemperatureSensor.aGenericComponent.componentType, Constant.ComponentSpec.type.sensor.temperature);
+    assert.equal(aTemperatureSensor.aGenericComponent.componentType, "temperature");
+    assert.equal(aTemperatureSensor.aGenericComponent.deviceID,"");
+    assert.equal(aTemperatureSensor.aGenericComponent.returnable,true);
+    assert.equal(aTemperatureSensor.aGenericComponent.timeout,100.0);
+    assert.equal(aTemperatureSensor.aGenericComponent.rate, 50.0);
+    assert.equal(aTemperatureSensor.aGenericComponent.eventFireMode,"fixedinterval");
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.position,{latitude:0.0,longitude:0.0});
 
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.maximumRange, null);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.minDelay, null);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.power, null);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.resolution, null);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.vendor, null);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.version,null);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.maximumRange, null);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.minDelay, null);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.power, null);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.resolution, null);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.vendor, null);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.version,null);
 
-    assert.equal(aTemperatureSensor.aSensorEvent.type, Constant.EventType.sensor);
-    assert.equal(aTemperatureSensor.aSensorEvent.type, "sensor");
-    assert.equal(aTemperatureSensor.aSensorEvent.eventFireMode, aGenericSensor.eventFireMode);
-    assert.deepEqual(aTemperatureSensor.aSensorEvent.position,aGenericSensor.position);
-    assert.deepEqual(aTemperatureSensor.aSensorEvent.sensorValue, Constant.SensorSpec.default.data);
-    assert.deepEqual(aTemperatureSensor.aSensorEvent.sensorValue, null);
-    assert.equal(aTemperatureSensor.aSensorEvent.cancelable,Constant.CancelAble.false);
+    assert.equal(aTemperatureSensor.aComponentEvent.type, Constant.EventType.sensor);
+    assert.equal(aTemperatureSensor.aComponentEvent.type, "sensor");
+    assert.equal(aTemperatureSensor.aComponentEvent.eventFireMode, aGenericComponent.eventFireMode);
+    assert.deepEqual(aTemperatureSensor.aComponentEvent.position,aGenericComponent.position);
+    assert.deepEqual(aTemperatureSensor.aComponentEvent.returnValue, Constant.ComponentSpec.default.data);
+    assert.deepEqual(aTemperatureSensor.aComponentEvent.returnValue, null);
+    assert.equal(aTemperatureSensor.aComponentEvent.cancelable,Constant.CancelAble.false);
 
     /* callback function */
-    expect(aTemperatureSensor.aSensorEvent.callback).to.be.a('function');
+    expect(aTemperatureSensor.aComponentEvent.callback).to.be.a('function');
 
     /* configure the sensor */
     var configuration = {
-        sensorType:"temperature",
-        sensorID:"12314213432432423154235",
+        componentType:"temperature",
+        deviceID:"12314213432432423154235",
         returnable: Constant.ReturnAble.false,
         timeout:200.0,
         rate:20.0,
@@ -97,24 +97,24 @@ test("properties - without configuration", function() {
     }
     aTemperatureSensor.config(configuration);
 
-    assert.equal(aTemperatureSensor.aGenericSensor.sensorType, Constant.SensorSpec.type.temperature);
-    assert.equal(aTemperatureSensor.aGenericSensor.sensorType, "temperature");
-    assert.equal(aTemperatureSensor.aGenericSensor.sensorID,"12314213432432423154235");
-    assert.equal(aTemperatureSensor.aGenericSensor.returnable,false);
-    assert.equal(aTemperatureSensor.aGenericSensor.timeout,200.0);
-    assert.equal(aTemperatureSensor.aGenericSensor.rate, 20.0);
-    assert.equal(aTemperatureSensor.aGenericSensor.eventFireMode,"valuechange");
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.position,{latitude:20.123412,longitude: 81.9023213});
+    assert.equal(aTemperatureSensor.aGenericComponent.componentType, Constant.ComponentSpec.type.sensor.temperature);
+    assert.equal(aTemperatureSensor.aGenericComponent.componentType, "temperature");
+    assert.equal(aTemperatureSensor.aGenericComponent.deviceID,"12314213432432423154235");
+    assert.equal(aTemperatureSensor.aGenericComponent.returnable,false);
+    assert.equal(aTemperatureSensor.aGenericComponent.timeout,200.0);
+    assert.equal(aTemperatureSensor.aGenericComponent.rate, 20.0);
+    assert.equal(aTemperatureSensor.aGenericComponent.eventFireMode,"valuechange");
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.position,{latitude:20.123412,longitude: 81.9023213});
 
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.maximumRange, 10);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.minDelay, 40.0);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.power, 30.1);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.resolution, 55.00);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.vendor, "Huawei");
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.version,1.0);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.maximumRange, 10);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.minDelay, 40.0);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.power, 30.1);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.resolution, 55.00);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.vendor, "Huawei");
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.version,1.0);
 
-    assert.deepEqual(aTemperatureSensor.aSensorEvent.type,'sensor');
-    assert.deepEqual(aTemperatureSensor.aSensorEvent.cancelable, true);
+    assert.deepEqual(aTemperatureSensor.aComponentEvent.type,'sensor');
+    assert.deepEqual(aTemperatureSensor.aComponentEvent.cancelable, true);
 
     assert.deepEqual(aTemperatureSensor.getData(true),configuration);
 
@@ -122,8 +122,8 @@ test("properties - without configuration", function() {
 
 test("properties - with configuration",function(done){
     var configuration = {
-        sensorType:"temperature",
-        sensorID:"12314213432432423154235",
+        componentType:"temperature",
+        deviceID:"12314213432432423154235",
         returnable: Constant.ReturnAble.false,
         timeout:200.0,
         rate:20.0,
@@ -142,8 +142,8 @@ test("properties - with configuration",function(done){
     }
 
     var configInSensor = {
-        sensorType:"temperature",
-        sensorID:"12314213432432423154235",
+        componentType:"temperature",
+        deviceID:"12314213432432423154235",
         returnable: Constant.ReturnAble.false,
         timeout:200.0,
         rate:20.0,
@@ -162,8 +162,8 @@ test("properties - with configuration",function(done){
     };
 
     var OriginalConfigInSensor = {
-        sensorType: "temperature",
-        sensorID: "",
+        componentType: "temperature",
+        deviceID: "",
         returnable: true,
         timeout: 100.0,
         rate: 50.0,
@@ -182,70 +182,70 @@ test("properties - with configuration",function(done){
 
     var aTemperatureSensor = new TemperatureSensor(configuration);
 
-    assert.equal(aTemperatureSensor.aGenericSensor.sensorType, Constant.SensorSpec.type.temperature);
-    assert.equal(aTemperatureSensor.aGenericSensor.sensorType, "temperature");
-    assert.equal(aTemperatureSensor.aGenericSensor.sensorID,"12314213432432423154235");
-    assert.equal(aTemperatureSensor.aGenericSensor.returnable,false);
-    assert.equal(aTemperatureSensor.aGenericSensor.timeout,200.0);
-    assert.equal(aTemperatureSensor.aGenericSensor.rate, 20.0);
-    assert.equal(aTemperatureSensor.aGenericSensor.eventFireMode,"valuechange");
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.position,{latitude:20.123412,longitude: 81.9023213});
+    assert.equal(aTemperatureSensor.aGenericComponent.componentType, Constant.ComponentSpec.type.sensor.temperature);
+    assert.equal(aTemperatureSensor.aGenericComponent.componentType, "temperature");
+    assert.equal(aTemperatureSensor.aGenericComponent.deviceID,"12314213432432423154235");
+    assert.equal(aTemperatureSensor.aGenericComponent.returnable,false);
+    assert.equal(aTemperatureSensor.aGenericComponent.timeout,200.0);
+    assert.equal(aTemperatureSensor.aGenericComponent.rate, 20.0);
+    assert.equal(aTemperatureSensor.aGenericComponent.eventFireMode,"valuechange");
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.position,{latitude:20.123412,longitude: 81.9023213});
 
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.maximumRange, 10);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.minDelay, 40.0);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.power, 30.1);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.resolution, 55.00);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.vendor, "Huawei");
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.version,1.0);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.maximumRange, 10);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.minDelay, 40.0);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.power, 30.1);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.resolution, 55.00);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.vendor, "Huawei");
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.version,1.0);
 
-    assert.deepEqual(aTemperatureSensor.aSensorEvent.type,'sensor');
-    assert.deepEqual(aTemperatureSensor.aSensorEvent.cancelable, true);
+    assert.deepEqual(aTemperatureSensor.aComponentEvent.type,'sensor');
+    assert.deepEqual(aTemperatureSensor.aComponentEvent.cancelable, true);
 
     assert.deepEqual(aTemperatureSensor.getData(true),configInSensor);
 
     // reset everything
     aTemperatureSensor.resetSensorState(true);
 
-    var aGenericSensor = new GenericSensor();
+    var aGenericSensor = new GenericComponent();
 
     /* property */
-    assert.ok(aTemperatureSensor.aGenericSensor instanceof GenericSensor);
-    assert.ok(aTemperatureSensor.aSensorEvent instanceof aTemperatureSensor.aGenericSensor.sensorEvent);
-    assert.equal(aTemperatureSensor.temperature, Constant.SensorSpec.default.data);
+    assert.ok(aTemperatureSensor.aGenericComponent instanceof GenericComponent);
+    assert.ok(aTemperatureSensor.aComponentEvent instanceof aTemperatureSensor.aGenericComponent.componentEvent);
+    assert.equal(aTemperatureSensor.temperature, Constant.ComponentSpec.default.data);
     assert.equal(aTemperatureSensor.temperature, null);
     assert.deepEqual(aTemperatureSensor.getData(true),OriginalConfigInSensor);
     assert.deepEqual(aTemperatureSensor.getData(), true);
 
     /* configuration */
-    assert.equal(aTemperatureSensor.aGenericSensor.sensorType, Constant.SensorSpec.type.temperature);
-    assert.equal(aTemperatureSensor.aGenericSensor.sensorType, "temperature");
-    assert.equal(aTemperatureSensor.aGenericSensor.sensorID,"");
-    assert.equal(aTemperatureSensor.aGenericSensor.returnable,true);
-    assert.equal(aTemperatureSensor.aGenericSensor.timeout,100.0);
-    assert.equal(aTemperatureSensor.aGenericSensor.rate, 50.0);
-    assert.equal(aTemperatureSensor.aGenericSensor.eventFireMode,"fixedinterval");
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.position,{latitude:0.0,longitude:0.0});
+    assert.equal(aTemperatureSensor.aGenericComponent.componentType, Constant.ComponentSpec.type.sensor.temperature);
+    assert.equal(aTemperatureSensor.aGenericComponent.componentType, "temperature");
+    assert.equal(aTemperatureSensor.aGenericComponent.deviceID,"");
+    assert.equal(aTemperatureSensor.aGenericComponent.returnable,true);
+    assert.equal(aTemperatureSensor.aGenericComponent.timeout,100.0);
+    assert.equal(aTemperatureSensor.aGenericComponent.rate, 50.0);
+    assert.equal(aTemperatureSensor.aGenericComponent.eventFireMode,"fixedinterval");
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.position,{latitude:0.0,longitude:0.0});
 
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.maximumRange, null);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.minDelay, null);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.power, null);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.resolution, null);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.vendor, null);
-    assert.deepEqual(aTemperatureSensor.aGenericSensor.version,null);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.maximumRange, null);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.minDelay, null);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.power, null);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.resolution, null);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.vendor, null);
+    assert.deepEqual(aTemperatureSensor.aGenericComponent.version,null);
 
-    assert.equal(aTemperatureSensor.aSensorEvent.type, Constant.EventType.sensor);
-    assert.equal(aTemperatureSensor.aSensorEvent.type, "sensor");
-    assert.deepEqual(aTemperatureSensor.aSensorEvent.cancelable, false);
-    assert.equal(aTemperatureSensor.aSensorEvent.eventFireMode, aGenericSensor.eventFireMode);
-    assert.deepEqual(aTemperatureSensor.aSensorEvent.position,aGenericSensor.position);
-    assert.deepEqual(aTemperatureSensor.aSensorEvent.sensorValue, Constant.SensorSpec.default.data);
-    assert.deepEqual(aTemperatureSensor.aSensorEvent.sensorValue, null);
-    assert.equal(aTemperatureSensor.aSensorEvent.cancelable,Constant.CancelAble.false);
+    assert.equal(aTemperatureSensor.aComponentEvent.type, Constant.EventType.sensor);
+    assert.equal(aTemperatureSensor.aComponentEvent.type, "sensor");
+    assert.deepEqual(aTemperatureSensor.aComponentEvent.cancelable, false);
+    assert.equal(aTemperatureSensor.aComponentEvent.eventFireMode, aGenericSensor.eventFireMode);
+    assert.deepEqual(aTemperatureSensor.aComponentEvent.position,aGenericSensor.position);
+    assert.deepEqual(aTemperatureSensor.aComponentEvent.returnValue, Constant.ComponentSpec.default.data);
+    assert.deepEqual(aTemperatureSensor.aComponentEvent.returnValue, null);
+    assert.equal(aTemperatureSensor.aComponentEvent.cancelable,Constant.CancelAble.false);
 
     /* callback function's behaviour */
-    expect(aTemperatureSensor.aSensorEvent.callback).to.be.a('function');
+    expect(aTemperatureSensor.aComponentEvent.callback).to.be.a('function');
     /* callback function on Generic Sensor API - on the sensor */
-    var result = aTemperatureSensor.aSensorEvent.callback(successCB_1,errorCB);
+    var result = aTemperatureSensor.aComponentEvent.callback(successCB_1,errorCB);
     /* doAction on Generic Sensor API - on the sensor */
     var result = aTemperatureSensor.currentTemperature(successCB_2,errorCB);
 
@@ -255,7 +255,7 @@ test("properties - with configuration",function(done){
     function successCB_2(result){
         assert.deepEqual(result,null);
         assert.deepEqual(result,aTemperatureSensor.temperature);
-        assert.deepEqual(aTemperatureSensor.aSensorEvent.sensorValue,null);
+        assert.deepEqual(aTemperatureSensor.aComponentEvent.returnValue,null);
         done();
     }
     function errorCB (err){
@@ -266,8 +266,8 @@ test("properties - with configuration",function(done){
 
 test("properties - callback test - updateTemperatureOnSensor",function(done){
     var configuration = {
-        sensorType:"temperature",
-        sensorID:"bd27134d93f07d65d244e502971f5573",
+        componentType:"temperature",
+        deviceID:"bd27134d93f07d65d244e502971f5573",
         returnable: Constant.ReturnAble.false,
         timeout:200.0,
         rate:20.0,
@@ -289,10 +289,10 @@ test("properties - callback test - updateTemperatureOnSensor",function(done){
     var aTemperatureSensor = new TemperatureSensor(configuration);
 
     /* callback function's behaviour */
-    expect(aTemperatureSensor.aSensorEvent.callback).to.be.a('function');
+    expect(aTemperatureSensor.aComponentEvent.callback).to.be.a('function');
 
     /* callback function on Generic Sensor API - on the sensor */
-    aTemperatureSensor.aSensorEvent.callback(successCB,errorCB);
+    aTemperatureSensor.aComponentEvent.callback(successCB,errorCB);
     // because callback setting has been disabled in 'TemperatureSensor'
 
     function successCB(result){
@@ -301,7 +301,7 @@ test("properties - callback test - updateTemperatureOnSensor",function(done){
     }
     function errorCB(err){
         // there will be output done by 'nano.js', which is out of my control
-        // trigger by e.g. sensorID:"12314213432432423154235" - wrong id
+        // trigger by e.g. deviceID:"12314213432432423154235" - wrong id
         assert.ok;
         done();
     }

@@ -42,8 +42,8 @@ function GeoPosition() {
 function GenericSensor() {
     var self = this;
 
-    self.sensorType = ""; // sensorType {String} e.g.
-    self.sensorID = ""; // sensorId {String} sensor ID
+    self.componentType = ""; // componentType {String} e.g.
+    self.deviceID = ""; // sensorId {String} sensor ID
     self.returnable = ReturnAble.true;
     self.timeout = 100.0; // in milliseconds
     self.rate = 50.0; // in milliseconds
@@ -65,14 +65,14 @@ function GenericSensor() {
      * configuration object
      * @param options {Object}
      */
-    self.configureSensor = function (options){
+    self.configureComponent = function (options){
         for (option in options){
             switch (option) {
-                case "sensorType":
-                    self.sensorType = options[option];
+                case "componentType":
+                    self.componentType = options[option];
                     break;
-                case "sensorID":
-                    self.sensorID = options[option];
+                case "deviceID":
+                    self.deviceID = options[option];
                     break;
                 case "returnable":
                     self.returnable = options[option];
@@ -111,13 +111,13 @@ function GenericSensor() {
         }
     }
 
-    self.sensorEvent = function () {
+    self.componentEvent = function () {
         var _self = this;
 
         _self.type = EventType.nothing;
         _self.eventFireMode = self.eventFireMode;
         _self.position = self.position; // position {Object} Position of the sensor
-        _self.sensorValue = {}; // sensorValues {Object} sensor values
+        _self.returnValue = {}; // sensorValues {Object} sensor values
         _self.cancelable = CancelAble.false;
         _self.callback = null;
         _self.state = State.original;
@@ -134,8 +134,8 @@ function GenericSensor() {
                     case "position":
                         _self.position = options[option];
                         break;
-                    case "sensorValue":
-                        _self.sensorValue = options[option];
+                    case "returnValue":
+                        _self.returnValue = options[option];
                         break;
                     case "cancelable":
                         _self.cancelable =  options[option];

@@ -6,8 +6,8 @@
 module('Temperature Sensor on Client-side');
 asyncTest('init a sensor - without configuration',function(){
     var OriginalConfiguration = {
-        sensorType: "temperature",
-        sensorID: "",
+        componentType: "temperature",
+        deviceID: "",
         returnable: true,
         timeout: 100.0,
         rate: 50.0,
@@ -37,8 +37,8 @@ asyncTest('init a sensor - without configuration',function(){
 
 asyncTest('init a sensor - with configuration',function(){
     var configuration = {
-        sensorType: 'temperature',
-        sensorID:"12314213432432423154235",
+        componentType: 'temperature',
+        deviceID:"12314213432432423154235",
         returnable: false,
         timeout:200.0,
         rate:20.0,
@@ -68,8 +68,8 @@ asyncTest('init a sensor - with configuration',function(){
 
 asyncTest('init a sensor - with configuration - reset sensor',function(){
     var configuration = {
-        sensorType: 'temperature',
-        sensorID:"12314213432432423154235",
+        componentType: 'temperature',
+        deviceID:"12314213432432423154235",
         returnable: false,
         timeout:200.0,
         rate:20.0,
@@ -88,8 +88,8 @@ asyncTest('init a sensor - with configuration - reset sensor',function(){
     };
 
     var OriginalConfiguration = {
-        sensorType: "temperature",
-        sensorID: "",
+        componentType: "temperature",
+        deviceID: "",
         returnable: true,
         timeout: 100.0,
         rate: 50.0,
@@ -123,8 +123,8 @@ asyncTest('init a sensor - with configuration - reset sensor',function(){
 
 asyncTest('get data from temperature sensor - with isInit == null - get currentTemperature', function(){
     var configuration = {
-        sensorType: 'temperature',
-        sensorID:"bd27134d93f07d65d244e502971f5573",
+        componentType: 'temperature',
+        deviceID:"bd27134d93f07d65d244e502971f5573",
         returnable: false,
         timeout:200.0,
         rate:20.0,

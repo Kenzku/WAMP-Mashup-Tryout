@@ -11,14 +11,14 @@ var Constant = require('./Constant');
  *
  * @constructor
  */
-function GenericSensor() {
+function GenericComponent() {
     var self = this;
 
-    self.sensorType = Constant.SensorSpec.type.default; // sensorType {String} e.g.
-    self.sensorID = Constant.SensorSpec.default.did; // sensorId {String} sensor ID
+    self.componentType = Constant.ComponentSpec.type.default; // componentType {String} e.g.
+    self.deviceID = Constant.ComponentSpec.default.did; // sensorId {String} sensor ID
     self.returnable = Constant.ReturnAble.true;
-    self.timeout = Constant.SensorSpec.default.timeout; // in milliseconds
-    self.rate = Constant.SensorSpec.default.rate; // in milliseconds
+    self.timeout = Constant.ComponentSpec.default.timeout; // in milliseconds
+    self.rate = Constant.ComponentSpec.default.rate; // in milliseconds
     self.eventFireMode = Constant.EventFireMode.fixedInterval;
     self.position = new Constant.GeoPosition(); // position {Object} Position of the sensor
 
@@ -26,25 +26,25 @@ function GenericSensor() {
      * hardware properties
      * @type {null}
      */
-    self.maximumRange = Constant.SensorSpec.default.hardware;
-    self.minDelay = Constant.SensorSpec.default.hardware;
-    self.power = Constant.SensorSpec.default.hardware;
-    self.resolution = Constant.SensorSpec.default.hardware;
-    self.vendor = Constant.SensorSpec.default.hardware;
-    self.version = Constant.SensorSpec.default.hardware;
+    self.maximumRange = Constant.ComponentSpec.default.hardware;
+    self.minDelay = Constant.ComponentSpec.default.hardware;
+    self.power = Constant.ComponentSpec.default.hardware;
+    self.resolution = Constant.ComponentSpec.default.hardware;
+    self.vendor = Constant.ComponentSpec.default.hardware;
+    self.version = Constant.ComponentSpec.default.hardware;
 
     /**
      * configuration object
      * @param options {Object}
      */
-    self.configureSensor = function (options){
+    self.configureComponent = function (options){
         for (var option in options){
             switch (option) {
-                case "sensorType":
-                    self.sensorType = options[option];
+                case "componentType":
+                    self.componentType = options[option];
                     break;
-                case "sensorID":
-                    self.sensorID = options[option];
+                case "deviceID":
+                    self.deviceID = options[option];
                     break;
                 case "returnable":
                     self.returnable = options[option];
@@ -83,13 +83,14 @@ function GenericSensor() {
         }
     }
 
-    self.sensorEvent = function () {
+    self.componentEvent = function () {
         var _self = this;
 
-        _self.type = Constant.EventType.nothing;
+        _self.type = Constant.EventType.nothing; // sensor or actuator
         _self.eventFireMode = self.eventFireMode;
         _self.position = self.position; // position {Object} Position of the sensor
-        _self.sensorValue = Constant.SensorSpec.default.data; // sensorValues {Object} sensor values
+        // Values {Object} sensor values - This value does not make sense to put here AT THE MOMENT
+        _self.returnValue = Constant.ComponentSpec.default.data;
         _self.cancelable = Constant.CancelAble.false;
         /* {{_self.callback}} if actuator, no return value, but change the state; if sensor, return a JSON */
         _self.callback = null;
@@ -99,7 +100,7 @@ function GenericSensor() {
          */
         _self.state = Constant.State.original;
 
-        _self.initSensorEvent = function(options){
+        _self.initComponentEvent = function(options){
             for (var option in options){
                 switch (option) {
                     case "type":
@@ -111,8 +112,8 @@ function GenericSensor() {
                     case "position":
                         _self.position = options[option];
                         break;
-                    case "sensorValue":
-                        _self.sensorValue = options[option];
+                    case "returnValue":
+                        _self.returnValue = options[option];
                         break;
                     case "cancelable":
                         _self.cancelable =  options[option];
@@ -133,7 +134,7 @@ function GenericSensor() {
                     _self.actuate(successfulCallback,errorCallback);
                     break;
                 case "sensor":
-                    return _self.sense(successfulCallback,errorCallback);
+                    _self.sense(successfulCallback,errorCallback);
                     break;
                 default:
                     return null;
@@ -152,12 +153,10 @@ function GenericSensor() {
 
         _self.sense = function (successfulCallback,errorCallback) {
             _self.callback(successfulCallback,errorCallback);
-//            _self.sensorValue = (typeof temp === 'object') ? temp : {};
-//            return _self.sensorValue;
         }
     };
 };
 
-module.exports = GenericSensor;
+module.exports = GenericComponent;
 
 

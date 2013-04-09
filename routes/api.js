@@ -4,7 +4,7 @@
  * Time: 16:03
  */
 var TemperatureSensor = require('../sensor/TemperatureSensorAPI');
-var GenericSensor = require('../sensor/GenericSensorAPI');
+var GenericSensor = require('../sensor/GenericComponentAPI');
 var Constant = require('../sensor/Constant');
 
 // temperature sensor

@@ -4,18 +4,18 @@
  * Time: 19:34
  */
 module( "Generic Sensor" );
-test("GenericSensor - properties", 7, function() {
-    var aGenericSensor = new GenericSensor();
-    equal(aGenericSensor.sensorType, "");
-    equal(aGenericSensor.sensorID,"");
+test("GenericComponent - properties", 7, function() {
+    var aGenericSensor = new GenericComponent();
+    equal(aGenericSensor.componentType, "");
+    equal(aGenericSensor.deviceID,"");
     equal(aGenericSensor.returnable,true);
     equal(aGenericSensor.timeout,100.0);
     equal(aGenericSensor.rate, 50.0);
     equal(aGenericSensor.eventFireMode,"fixedinterval");
     deepEqual(aGenericSensor.position,{latitude:0.0,longitude:0.0});
 });
-test("GenericSensor - hardware properties", 6, function() {
-    var aGenericSensor = new GenericSensor();
+test("GenericComponent - hardware properties", 6, function() {
+    var aGenericSensor = new GenericComponent();
 
     deepEqual(aGenericSensor.maximumRange, null);
     deepEqual(aGenericSensor.minDelay, null);
@@ -25,8 +25,8 @@ test("GenericSensor - hardware properties", 6, function() {
     deepEqual(aGenericSensor.version,null);
 });
 
-test("GenericSensor - hardware properties initialisation", 18, function() {
-    var aGenericSensor = new GenericSensor();
+test("GenericComponent - hardware properties initialisation", 18, function() {
+    var aGenericSensor = new GenericComponent();
 
     initialiseHWProperty(aGenericSensor);
 });
@@ -36,7 +36,7 @@ function initialiseHWProperty(aGenericSensor){
         maximumRange:10,
         minDelay:40.0
     }
-    aGenericSensor.configureSensor(options);
+    aGenericSensor.configureComponent(options);
 
     deepEqual(aGenericSensor.maximumRange, 10);
     deepEqual(aGenericSensor.minDelay, 40);
@@ -49,7 +49,7 @@ function initialiseHWProperty(aGenericSensor){
         power:30.1,
         resolution:55.00
     }
-    aGenericSensor.configureSensor(options);
+    aGenericSensor.configureComponent(options);
 
     deepEqual(aGenericSensor.maximumRange, 10);
     deepEqual(aGenericSensor.minDelay, 40);
@@ -64,7 +64,7 @@ function initialiseHWProperty(aGenericSensor){
         vendor:"Huawei",
         version:1.0
     }
-    aGenericSensor.configureSensor(options);
+    aGenericSensor.configureComponent(options);
 
     deepEqual(aGenericSensor.maximumRange, null);
     deepEqual(aGenericSensor.minDelay, 40);
@@ -74,21 +74,21 @@ function initialiseHWProperty(aGenericSensor){
     deepEqual(aGenericSensor.version, 1.0);
 }
 
-test("GenericSensor - property initialisation", 7, function() {
-    var aGenericSensor = new GenericSensor();
+test("GenericComponent - property initialisation", 7, function() {
+    var aGenericSensor = new GenericComponent();
     var options = {
-        sensorType:"Temperature",
-        sensorID:"12314213432432423154235",
+        componentType:"Temperature",
+        deviceID:"12314213432432423154235",
         returnable:ReturnAble.false,
         timeout:200.0,
         rate:20.0,
         eventFireMode:EventFireMode.valueChange,
         position:{latitude:20.123412,longitude: 81.9023213}
     }
-    aGenericSensor.configureSensor(options);
+    aGenericSensor.configureComponent(options);
 
-    equal(aGenericSensor.sensorType, "Temperature");
-    equal(aGenericSensor.sensorID,"12314213432432423154235");
+    equal(aGenericSensor.componentType, "Temperature");
+    equal(aGenericSensor.deviceID,"12314213432432423154235");
     equal(aGenericSensor.returnable,false);
     equal(aGenericSensor.timeout,200.0);
     equal(aGenericSensor.rate, 20.0);
@@ -96,21 +96,21 @@ test("GenericSensor - property initialisation", 7, function() {
     deepEqual(aGenericSensor.position,{latitude:20.123412,longitude: 81.9023213});
 });
 
-test("GenericSensor - property mixture", 31, function() {
-    var aGenericSensor = new GenericSensor();
+test("GenericComponent - property mixture", 31, function() {
+    var aGenericSensor = new GenericComponent();
     var options = {
-        sensorType:"Temperature",
-        sensorID:"12314213432432423154235",
+        componentType:"Temperature",
+        deviceID:"12314213432432423154235",
         returnable:ReturnAble.false,
         timeout:200.0,
         rate:20.0,
         eventFireMode:EventFireMode.valueChange,
         position:{latitude:20.123412,longitude: 81.9023213}
     }
-    aGenericSensor.configureSensor(options);
+    aGenericSensor.configureComponent(options);
 
-    equal(aGenericSensor.sensorType, "Temperature");
-    equal(aGenericSensor.sensorID,"12314213432432423154235");
+    equal(aGenericSensor.componentType, "Temperature");
+    equal(aGenericSensor.deviceID,"12314213432432423154235");
     equal(aGenericSensor.returnable,false);
     equal(aGenericSensor.timeout,200.0);
     equal(aGenericSensor.rate, 20.0);
@@ -128,37 +128,37 @@ test("GenericSensor - property mixture", 31, function() {
 });
 
 module( "Generic Sensor Event" );
-test("GenericSensor.sensorEvent - property", 7, function() {
-    var aGenericSensor = new GenericSensor();
+test("GenericComponent.componentEvent - property", 7, function() {
+    var aGenericSensor = new GenericComponent();
 
-    var aSensorEvent = new aGenericSensor.sensorEvent();
+    var aSensorEvent = new aGenericSensor.componentEvent();
 
     equal(aSensorEvent.type, EventType.nothing);
     equal(aSensorEvent.type, "nothing");
     equal(aSensorEvent.eventFireMode,aGenericSensor.eventFireMode);
     deepEqual(aSensorEvent.position,aGenericSensor.position);
-    deepEqual(aSensorEvent.sensorValue, {});
+    deepEqual(aSensorEvent.returnValue, {});
     equal(aSensorEvent.cancelable,CancelAble.false);
     deepEqual(aSensorEvent.callback,null);
 });
 
-test("GenericSensor.sensorEvent - property initialise", function() {
-    var aGenericSensor = new GenericSensor();
+test("GenericComponent.componentEvent - property initialise", function() {
+    var aGenericSensor = new GenericComponent();
 
-    var aSensorEvent = new aGenericSensor.sensorEvent();
+    var aSensorEvent = new aGenericSensor.componentEvent();
     var options = {
         type : EventType.actuator,
         eventFireMode : EventFireMode.valueChange,
-        sensorValue : {temperature: 10.11}
+        returnValue : {temperature: 10.11}
     }
 
-    aSensorEvent.initSensorEvent(options);
+    aSensorEvent.initComponentEvent(options);
     equal(aSensorEvent.type, EventType.actuator);
     equal(aSensorEvent.type, "actuator");
     equal(aSensorEvent.eventFireMode,EventFireMode.valueChange);
     equal(aSensorEvent.eventFireMode,"valuechange");
     deepEqual(aSensorEvent.position,aGenericSensor.position);
-    deepEqual(aSensorEvent.sensorValue, {temperature: 10.11});
+    deepEqual(aSensorEvent.returnValue, {temperature: 10.11});
     equal(aSensorEvent.cancelable,CancelAble.false);
     deepEqual(aSensorEvent.callback,null);
 
@@ -166,13 +166,13 @@ test("GenericSensor.sensorEvent - property initialise", function() {
         eventFireMode : EventFireMode.fixedInterval,
         position : {latitude:82.34324,longitude: 70.23413}
     }
-    aSensorEvent.initSensorEvent(options);
+    aSensorEvent.initComponentEvent(options);
     equal(aSensorEvent.type, EventType.actuator);
     equal(aSensorEvent.type, "actuator");
     equal(aSensorEvent.eventFireMode,EventFireMode.fixedInterval);
     equal(aSensorEvent.eventFireMode,"fixedinterval");
     deepEqual(aSensorEvent.position,{latitude:82.34324,longitude: 70.23413});
-    deepEqual(aSensorEvent.sensorValue, {temperature: 10.11});
+    deepEqual(aSensorEvent.returnValue, {temperature: 10.11});
     equal(aSensorEvent.cancelable,CancelAble.false);
     deepEqual(aSensorEvent.callback,null);
 
@@ -180,13 +180,13 @@ test("GenericSensor.sensorEvent - property initialise", function() {
         type : EventType.sensor,
         cancelable : CancelAble.true
     }
-    aSensorEvent.initSensorEvent(options);
+    aSensorEvent.initComponentEvent(options);
     equal(aSensorEvent.type, EventType.sensor);
     equal(aSensorEvent.type, "sensor");
     equal(aSensorEvent.eventFireMode,EventFireMode.fixedInterval);
     equal(aSensorEvent.eventFireMode,"fixedinterval");
     deepEqual(aSensorEvent.position,{latitude:82.34324,longitude: 70.23413});
-    deepEqual(aSensorEvent.sensorValue, {temperature: 10.11});
+    deepEqual(aSensorEvent.returnValue, {temperature: 10.11});
     equal(aSensorEvent.cancelable,CancelAble.true);
     deepEqual(aSensorEvent.callback,null);
 
@@ -195,20 +195,20 @@ test("GenericSensor.sensorEvent - property initialise", function() {
         cancelable : CancelAble.true,
         callback : "this will not work"
     }
-    aSensorEvent.initSensorEvent(options);
+    aSensorEvent.initComponentEvent(options);
     equal(aSensorEvent.type, EventType.sensor);
     equal(aSensorEvent.type, "sensor");
     equal(aSensorEvent.eventFireMode,EventFireMode.fixedInterval);
     equal(aSensorEvent.eventFireMode,"fixedinterval");
     deepEqual(aSensorEvent.position,{latitude:82.34324,longitude: 70.23413});
-    deepEqual(aSensorEvent.sensorValue, {temperature: 10.11});
+    deepEqual(aSensorEvent.returnValue, {temperature: 10.11});
     equal(aSensorEvent.cancelable,CancelAble.true);
     deepEqual(aSensorEvent.callback,null);
 });
 
-test("GenericSensor.sensorEvent - event action - nothing", function() {
-    var aGenericSensor = new GenericSensor();
-    var aSensorEvent = new aGenericSensor.sensorEvent();
+test("GenericComponent.componentEvent - event action - nothing", function() {
+    var aGenericSensor = new GenericComponent();
+    var aSensorEvent = new aGenericSensor.componentEvent();
 
     var options = {
         callback : null
@@ -221,7 +221,7 @@ test("GenericSensor.sensorEvent - event action - nothing", function() {
         callback : "this will not work"
     }
 
-    aSensorEvent.initSensorEvent(options);
+    aSensorEvent.initComponentEvent(options);
     deepEqual(aSensorEvent.callback,null);
     deepEqual(aSensorEvent.doAction(),null);
 
@@ -230,7 +230,7 @@ test("GenericSensor.sensorEvent - event action - nothing", function() {
         callback : function() { aSensorEvent.state += 1; }
     }
 
-    aSensorEvent.initSensorEvent(options);
+    aSensorEvent.initComponentEvent(options);
     equal(aSensorEvent.type, EventType.actuator);
     deepEqual(typeof aSensorEvent.callback,'function');
     var previousState = aSensorEvent.state;

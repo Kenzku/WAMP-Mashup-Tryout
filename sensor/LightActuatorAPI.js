@@ -1,73 +1,47 @@
 /**
  * User: Ken
- * Date: 04/04/2013
- * Time: 12:02
+ * Date: 09/04/2013
+ * Time: 12:46
  */
-var GenericComponent = require('./GenericComponentAPI');
+var GenericSensor = require('GenericComponentAPI');
 var Constant = require('../sensor/Constant');
-var CouchDB = require('../db/CouchDB');
 
-function TemperatureSensor(configuration) {
+function LightActuator (configuration) {
     var self = this;
 
-    self.aGenericComponent = new GenericComponent();
+    self.aGenericComponent = new GenericSensor();
     self.aComponentEvent = new self.aGenericComponent.componentEvent();
-    /**
-     * temperature return by sensor
-     * @type {number}
-     */
-    self.temperature = Constant.ComponentSpec.default.data;
 
     /**
-     * Tell the sensor what to do.
-     * This might be an asynchronous callback function
-     * when configure the sensor,
-     * this function will be automatically inject into
-     * Generic Sensor API
-     * @return {{}}
+     * a on/off switch, or a dial
+     * @type {String}
      */
-    self.updateTemperatureOnSensor = function (successfulCallback,errorCallback) {
-        /* Need To Do - currently testing on one sample data */
-        var aCouchDB = new CouchDB();
-        aCouchDB.readDocument(self.aGenericComponent.deviceID,
-            // success CB
-            function(body){
-                if (successfulCallback && typeof successfulCallback === 'function'){
-                    var data;
-                    if(!body.data) {
-                        data = Constant.ComponentSpec.default.data;
-                    }else{
-                        data = body.data.c0 ? { c0: body.data.c0 } : Constant.ComponentSpec.default.data;
-                    }
-                    self.aComponentEvent.returnValue = data;
-                    self.temperature = self.aComponentEvent.returnValue;
-                    successfulCallback(data);
-                }
-            },
-            // error CB
-            function(err){
-                if (errorCallback && typeof errorCallback === 'function'){
-                    errorCallback(err);
-                }
-            });
-    };
+    self.switchMode = Constant.ComponentSpec.default.switchMode.onoff;
     /**
-     * Ask the sensor to do an Action
-     * This might be an asynchronous function
-     * @return {number}
+     * if it is a Boolean, it refers to on/off mode: true - on, false-off
+     * if it is a Number, it refers to dial mode: 0-100,
+     * where 0 is the minimal power
+     * @type {Boolean} or {Number}
      */
-    self.currentTemperature = function (successfulCallback,errorCallback) {
-        self.aComponentEvent.doAction(successfulCallback,errorCallback);
-    };
+    self.strength = Constant.ComponentSpec.default.switch.off;
+
+    self.actuate = function (successfulCallback,errorCallback){
+        if (successfulCallback && typeof successfulCallback === 'function'){
+            successfulCallback();
+        }
+        if (errorCallback && typeof errorCallback === 'function'){
+            errorCallback();
+        }
+    }
+
     /**
      * reset current sensor state
      * you might need to re-config the sensor after reset
      * by calling 'config'
      */
-    self.resetSensorState = function () {
-        self.aGenericComponent = new GenericComponent();
+    self.resetActuatorState = function () {
+        self.aGenericComponent = new GenericSensor();
         self.aComponentEvent = new self.aGenericComponent.componentEvent();
-        self.temperature = Constant.ComponentSpec.default.data;
         self.configuration = Constant.ComponentSpec.default.config;
         self.config();
     };
@@ -86,7 +60,7 @@ function TemperatureSensor(configuration) {
         if (configuration && typeof configuration === 'object'){
             // initialise Generic Sensor
             options = {
-                componentType: Constant.ComponentSpec.type.sensor.temperature,
+                componentType: Constant.ComponentSpec.type.actuator.switch,
                 deviceID: configuration.deviceID || Constant.ComponentSpec.default.did,
                 returnable:configuration.returnable || Constant.ReturnAble.false,
                 timeout:configuration.timeout || Constant.ComponentSpec.default.timeout,
@@ -104,17 +78,27 @@ function TemperatureSensor(configuration) {
 
             // initialise Sensor Event
             options = {
-                type : configuration.type || Constant.EventType.sensor,
-                returnValue : self.temperature,
+                type : configuration.type || Constant.EventType.actuator,
+                returnValue : Constant.ComponentSpec.default.data,
                 cancelable: configuration.cancelable || Constant.CancelAble.false,
                 // validation will be check in GenericSensorAPI
-                callback : self.updateTemperatureOnSensor
+                callback : self.actuate
             };
             self.aComponentEvent.initComponentEvent(options);
+
+            // configure Light Actuator
+            self.switchMode = configuration.switchMode || Constant.ComponentSpec.default.switchMode.onoff;
+            self.strength = (self.switchMode == Constant.ComponentSpec.default.switchMode.onoff ) ?
+                // on off mode
+                ( (configuration.strength == Constant.ComponentSpec.default.switch.on || configuration.strength == Constant.ComponentSpec.default.switch.off) ?
+                    configuration.strength : Constant.ComponentSpec.default.switch.off )
+                // dial mode
+                : ( (configuration.strength >= 0 && configuration.strength<=100) ?
+                    configuration.strength / 100 : (configuration.strength % 100) / 100 );
         }else{
             options = {
-                componentType: Constant.ComponentSpec.type.sensor.temperature,
-                type : Constant.EventType.sensor,
+                componentType: Constant.ComponentSpec.type.actuator.switch,
+                type : Constant.EventType.actuator,
                 callback : self.updateTemperatureOnSensor
             };
             self.aGenericComponent.configureComponent(options);
@@ -122,6 +106,9 @@ function TemperatureSensor(configuration) {
         }
         // set configuration
         self.configuration = {
+            switchMode : self.switchMode,
+            strength : self.strength,
+            strength : Constant.ComponentSpec.default.data.strength,
             componentType: self.aGenericComponent.componentType,
             deviceID: self.aGenericComponent.deviceID,
             returnable: self.aGenericComponent.returnable,
@@ -140,27 +127,9 @@ function TemperatureSensor(configuration) {
             cancelable: self.aComponentEvent.cancelable
         }
     };
-    /**
-     * return temperature data
-     * but if 'isInit' true, returns default configuration when initialise an object
-     * @param isInit {boolean}
-     * @param successfulCallback {function} called when get data successfully
-     * @returns {{}} if isInit is true, otherwise return true.
-     */
-    self.getData = function (isInit,successfulCallback){
-        if(isInit){
-            return self.configuration;
-        }else{
-            if (successfulCallback && typeof successfulCallback === 'function'){
-                successfulCallback({data:self.temperature});
-            }
-            return true;
-        }
-    };
 
     (self.init = function () {
         self.config(configuration);
     })();
 }
-
-module.exports = TemperatureSensor;
+module.exports = LightActuator;
