@@ -3,6 +3,8 @@ WAMP-Tryout
 
 This tryout demonstrates a WAMP client-server example , running Ratchet WAMP Sever and Node.js Webserver, using Autobohn.js on Client Side
 
+**The application is still under development** and it does not work yet.
+
 ## Build the app
 
 To sreve the application you need a server running Node.js with NPM installed. Step to get the web server running:
