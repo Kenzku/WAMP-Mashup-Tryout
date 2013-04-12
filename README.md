@@ -4,6 +4,7 @@ WAMP-Tryout
 This tryout demonstrates a WAMP client-server example , running Ratchet WAMP Sever and Node.js Webserver, using Autobohn.js on Client Side
 
 **The application is still under development** and it does not work yet.
+It is now moved to https://github.com/Watke/Always-Aura
 
 ## Build the app
 
